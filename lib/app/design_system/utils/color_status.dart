@@ -5,11 +5,11 @@ abstract class ColorStatus {
   static Color get(String status) {
     switch (status) {
       case 'Alive':
-        return TColors.light().success;
+        return TColors.success;
       case 'Dead':
-        return TColors.light().error;
+        return TColors.error;
       default:
-        return TColors.light().mediumGrey400;
+        return TColors.mediumGrey400;
     }
   }
 }
