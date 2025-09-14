@@ -12,14 +12,14 @@ class RepositoryRickAndMortyApiCache implements CharacterRepository {
 
   @override
   Future<List<Character>> fetchCharacters({int page = 1}) async {
-    final cached = cache.getCharacters(page);
+    final cached = await cache.getCharacters(page);
     if (cached != null && cached.isNotEmpty) return cached;
 
     final response = await networkManager.get<dynamic>('$baseUrl/character?page=$page');
 
     final results = response['results'] as List<dynamic>;
     final characters = results.map((json) => Character.fromJson(json)).toList();
-    cache.setCharacters(page, characters);
+    await cache.setCharacters(page, characters);
     return characters;
   }
 }
