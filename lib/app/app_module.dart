@@ -4,6 +4,7 @@ import 'package:wayds_challenge/app/core/character/data/repositories/repository_
 import 'package:wayds_challenge/app/core/character/domain/repositories/character_repository.dart';
 import 'package:wayds_challenge/app/core/network/data/network_manager_http.dart';
 import 'package:wayds_challenge/app/core/network/domain/network_manager.dart';
+import 'package:wayds_challenge/app/details/details_page.dart';
 import 'package:wayds_challenge/app/home/controller/home_controller.dart';
 import 'package:wayds_challenge/app/home/presentation/home_page.dart';
 
@@ -19,5 +20,6 @@ class AppModule extends Module {
   @override
   void routes(r) {
     r.child('/', child: (context) => HomePage());
+    r.child('/details', child: (context) => DetailsPage(character: Modular.args.data));
   }
 }
