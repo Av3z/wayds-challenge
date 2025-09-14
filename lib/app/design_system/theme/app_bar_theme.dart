@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wayds_challenge/app/design_system/theme/export_theme.dart';
 
 final appBarTheme = AppBarTheme(
-  backgroundColor: Colors.white,
+  backgroundColor: TColors.white,
   elevation: 0,
   centerTitle: true,
-  titleTextStyle: TextStyle(color: Colors.black87, fontSize: 20, fontWeight: FontWeight.bold),
+  titleTextStyle: TextStyle(color: TColors.darkGrey900, fontSize: 20, fontWeight: FontWeight.bold),
 );

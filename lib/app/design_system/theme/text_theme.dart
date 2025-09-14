@@ -12,4 +12,5 @@ final textTheme = TextTheme(
   labelSmall: TextStyle(fontFamily: fontFamily, fontSize: 13.33, fontWeight: FontWeight.w400, color: TColors.black),
   bodyLarge: TextStyle(fontFamily: fontFamily, fontSize: 19.2, height: 1.2, fontWeight: FontWeight.w400, color: TColors.black),
   bodySmall: TextStyle(fontFamily: fontFamily, fontSize: 16, height: 1.5, fontWeight: FontWeight.w600, color: TColors.black),
+  bodyMedium: TextStyle(fontFamily: fontFamily, fontSize: 14, height: 1.5, fontWeight: FontWeight.w400, color: TColors.black),
 );
