@@ -1,44 +1,36 @@
-import 'package:wayds_challenge/app/core/character/domain/models/character.dart';
 import 'dart:convert';
+import 'package:wayds_challenge/app/core/character/domain/models/cache_entry_model.dart';
+import 'package:wayds_challenge/app/core/character/domain/models/character.dart';
 import 'package:wayds_challenge/app/core/localstorage/domain/local_storage.dart';
 
 class CharacterCache {
-  final Map<int, List<Character>> _cache = {};
   final LocalStorage localStorage;
   static const expirationMinutes = 5;
 
   CharacterCache(this.localStorage);
 
   Future<List<Character>?> getCharacters(int page) async {
-    if (_cache.containsKey(page)) {
-      return _cache[page];
+    final url = 'https://rickandmortyapi.com/api/character?page=$page';
+    final jsonStr = await localStorage.getData(url);
+
+    if (jsonStr == null) return null;
+    final map = jsonDecode(jsonStr);
+    final entry = CacheEntryModel.fromMap(map);
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final expired = now - entry.timestamp > expirationMinutes * 60 * 1000;
+
+    if (expired) {
+      await localStorage.deleteData(url);
+      return null;
     }
 
-    final jsonStr = await localStorage.getData('characters_page_$page');
-    final timestampStr = await localStorage.getData('characters_page_${page}_timestamp');
-    final timestamp = timestampStr != null ? int.tryParse(timestampStr) : null;
-
-    if (jsonStr != null && timestamp != null) {
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final expired = now - timestamp > expirationMinutes * 60 * 1000;
-
-      if (!expired) {
-        final List<dynamic> jsonList = jsonDecode(jsonStr);
-        final characters = jsonList.map((e) => Character.fromJson(e)).toList();
-        _cache[page] = characters;
-        return characters;
-      }
-
-      await localStorage.deleteData('characters_page_$page');
-      await localStorage.deleteData('characters_page_${page}_timestamp');
-    }
-    return null;
+    return (entry.data as List<dynamic>?)?.map((e) => Character.fromJson(e)).toList();
   }
 
   Future<void> setCharacters(int page, List<Character> characters) async {
-    _cache[page] = characters;
-    final jsonStr = jsonEncode(characters.map((e) => e.toMap()).toList());
-    await localStorage.saveData('characters_page_$page', jsonStr);
-    await localStorage.saveData('characters_page_${page}_timestamp', DateTime.now().millisecondsSinceEpoch.toString());
+    final url = 'https://rickandmortyapi.com/api/character?page=$page';
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final entry = CacheEntryModel(timestamp: now, data: characters.map((e) => e.toMap()).toList());
+    await localStorage.saveData(url, jsonEncode(entry.toMap()));
   }
 }
