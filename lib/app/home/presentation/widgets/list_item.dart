@@ -21,9 +21,10 @@ class _ListItemState extends State<ListItem> {
     return ListTile(
       leading: CircleAvatar(backgroundImage: TImageProvider.get(widget.character.image)),
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(widget.character.name),
-          SizedBox(width: 8),
+          Flexible(child: Text(widget.character.name, overflow: TextOverflow.ellipsis)),
+          const SizedBox(width: 8),
           Chip(label: Text(widget.character.status), backgroundColor: statusColor),
         ],
       ),
